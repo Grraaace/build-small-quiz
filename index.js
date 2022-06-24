@@ -47,6 +47,8 @@ function buildQuiz(){
         <div class="answer">
             ${answers.join("")}
         </div>
+        <div class="explanation">
+        </div>
         `
     )
     });
@@ -57,19 +59,25 @@ function buildQuiz(){
 function showResult(){
 
     const answerDisplays = quizDisplay.querySelectorAll(".answer");
-    
+    const resultExplanations = quizDisplay.querySelectorAll(".explanation");
+  
     let numCorrect = 0;
 
     quizData.forEach((currentQuestionPackage, questionNum) => {
         const answerDisplay = answerDisplays[questionNum];
         const selector = `input[name=question${questionNum}]:checked`;
         const userAnswer = answerDisplay.querySelector(selector).value;
-      
+        const resultExplanation = resultExplanations[questionNum];
+
         if(userAnswer === currentQuestionPackage.correct){
             numCorrect = numCorrect + 1;
             answerDisplay.style.color = "green";
+            resultExplanation.innerText = "정답입니다";
+            resultExplanation.style.color = "green";
         } else {
             answerDisplay.style.color = "red";
+            resultExplanation.innerText = `틀렸습니다. 정답은 ${currentQuestionPackage.correct}입니다.`;
+            resultExplanation.style.color = "red";
         }
 
     });
