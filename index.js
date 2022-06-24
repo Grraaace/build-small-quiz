@@ -1,8 +1,7 @@
 const quizDisplay = document.getElementById("quiz");
 const submitBtn = document.getElementById("submit");
-const resultDisply = document.getElementById("result");
-//모든 퀴즈와 선택지 배열
-const output = [];
+const resultDisplay = document.getElementById("result");
+
 const quizData = [
     {
         question : "웹개발에 주로 사용되는 프론트언어는?",
@@ -24,15 +23,18 @@ const quizData = [
     },
 ]
 
-function handleEachQuestionPackage (currentQuestionPackage, questionNum){
+function buildQuiz(){ 
     
-    // 퀴즈 선택지 배열
+    const output = [];
+
+    quizData.forEach((currentQuestionPackage, questionNum)=>{
+    
     const answers = [];
 
     for (eachOpt in currentQuestionPackage.answer) {
         answers.push(
             `<label>
-                <input type="radio" name="${questionNum}" value="${eachOpt}">
+                <input type="radio" name="question${questionNum}" value="${eachOpt}">
                 ${eachOpt}: ${currentQuestionPackage.answer[eachOpt]}
             </label>`
         )   
@@ -42,21 +44,41 @@ function handleEachQuestionPackage (currentQuestionPackage, questionNum){
         `<div class="question">
             ${currentQuestionPackage.question}
         </div>
-        <div class="anwser">
+        <div class="answer">
             ${answers.join("")}
         </div>
         `
     )
-}
+    });
 
-function buildQuiz(){ 
-    quizData.forEach(handleEachQuestionPackage)
     quizDisplay.innerHTML = output.join(" ");
 }
 
 function showResult(){
-  
+
+    const answerDisplays = quizDisplay.querySelectorAll(".answer");
+    
+    let numCorrect = 0;
+
+    quizData.forEach((currentQuestionPackage, questionNum) => {
+        const answerDisplay = answerDisplays[questionNum];
+        const selector = `input[name=question${questionNum}]:checked`;
+        const userAnswer = answerDisplay.querySelector(selector).value;
+      
+        if(userAnswer === currentQuestionPackage.correct){
+            numCorrect = numCorrect + 1;
+            answerDisplay.style.color = "green";
+        } else {
+            answerDisplay.style.color = "red";
+        }
+
+    });
+
+    resultDisplay.innerHTML = `${numCorrect} out of ${quizData.length}`;
 }
 
 buildQuiz();
 submitBtn.addEventListener("click", showResult);
+
+
+
