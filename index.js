@@ -1,6 +1,8 @@
 const quizDisplay = document.getElementById("quiz");
-const submitBtn = document.getElementById("submit");
 const resultDisplay = document.getElementById("result");
+const submitBtn = document.getElementById("submit");
+const backBtn = document.getElementById("back");
+const nextBtn = document.getElementById("next");
 
 const quizData = [
     {
@@ -41,13 +43,15 @@ function buildQuiz(){
     }
  
     output.push(
-        `<div class="question">
-            ${currentQuestionPackage.question}
-        </div>
-        <div class="answer">
-            ${answers.join("")}
-        </div>
-        <div class="explanation">
+        `<div class="slide">
+            <div class="question">
+                ${questionNum + 1}.${currentQuestionPackage.question}
+            </div>
+            <div class="answer">
+                ${answers.join("")}
+            </div>
+            <div class="explanation">
+            </div>
         </div>
         `
     )
@@ -82,11 +86,53 @@ function showResult(){
 
     });
 
-    resultDisplay.innerHTML = `${numCorrect} out of ${quizData.length}`;
+    resultDisplay.innerHTML = `${quizData.length}문제 중에 ${numCorrect}문제 맞췄습니다`;
 }
 
 buildQuiz();
+
+const slides = document.querySelectorAll(".slide");
+let currentSlide = 0;
+
+function showSlide (n) {
+    slides[n].classList.remove("slide");
+    slides[n].classList.add("active-slide");
+}
+
+function hideSlide (n) {
+    slides[n].classList.add("slide");
+    slides[n].classList.remove("active-slide"); 
+}
+
+showSlide (currentSlide);
+
+function showNextSlide () {
+    if ( currentSlide >= slides.length - 1) {
+        return currentSlide;
+    }
+
+    currentSlide++;
+    console.log(currentSlide);
+    hideSlide (currentSlide - 1);
+    showSlide (currentSlide);
+    }
+   
+function showBackSlide () {
+    if ( currentSlide <= 0 ) {
+        return currentSlide;
+    }
+    
+    currentSlide--;
+    console.log(currentSlide);
+    hideSlide (currentSlide + 1);
+    showSlide (currentSlide);
+};
+
+
 submitBtn.addEventListener("click", showResult);
+backBtn.addEventListener("click", showBackSlide);
+nextBtn.addEventListener("click", showNextSlide);
+
 
 
 
